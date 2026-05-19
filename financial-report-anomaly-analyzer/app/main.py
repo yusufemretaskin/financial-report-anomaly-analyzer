@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from app.api.v1 import health,reports 
-from pandas import pd
 
 app=FastAPI(
     title="Financial Report Anomaly Analyzer",
