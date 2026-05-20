@@ -2,8 +2,11 @@ from fastapi import APIRouter, UploadFile, File, Path, HTTPException
 import pandas as pd
 from pathlib import Path
 from app.services.report_analyzer import analyze_report
+from app.services.llm_service import generate_anomaly_summary
 
 router=APIRouter()
+
+
 
 ALLOWED_CONTENT_TYPES={
     "text/csv",
@@ -66,3 +69,20 @@ def get_report_anomalies(file_name:str):
     }   
 
 
+
+@router.get("/{file_name}/summary")
+def get_report_anomalies_summary(file_name:str):
+    file=Path(file_name).name
+    file_path=REPORT_UPLOAD_DIR / file
+
+    if not file_path.exists():
+        HTTPException(
+            status_code=404,
+            detail="file not found."
+        )
+    result=analyze_report(file_path)
+    summary=generate_anomaly_summary(result["anomalies"])
+    return {
+        "file_name": file_name,
+        "summary": summary
+    }  
