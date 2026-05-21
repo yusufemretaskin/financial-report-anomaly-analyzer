@@ -51,7 +51,7 @@ def get_reports():
         })
     return reports
 
-@router.get("/anomalies")
+@router.get("/{file_name}/anomalies")
 def get_report_anomalies(file_name:str):
     file=Path(file_name).name
     file_path=REPORT_UPLOAD_DIR / file
